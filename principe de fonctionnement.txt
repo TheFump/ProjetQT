@@ -1,0 +1,25 @@
+* Ajout de Projet
+	-> se fait a l'aide de ProjetManager
+		* il créer la Tache et la répertorie
+
+* Ajout d'un Tache (on doit indiquer le chemin: Projet/TacheComposite/...)
+	-> se fait à l'aide de TacheManager
+		* créer la tache et la stocke
+		* appele ProjetManager et met à jour le projet (tableau des taches, disponibilite, echeance...)
+			* (répéter autant de fois que necessaire) si elle est dans un TacheComposite,  elle met à jour la TacheComposite(tableau des taches, disponibilite, echeance...)
+		* ajoute de la Tache dans tableauTachesRestantAProgrammer dans ProgrammationManager
+
+
+* Programmation d'une Tache
+	-> se fait à l'aide de ProgrammationManager
+		* On recupère un Tache dans tableauTachesRestantAProgrammer
+		* L'utilisateur choisis les détaille de la programmation
+		* On vérifie les contrainte de precedance et on empeche la programmation de 2 taches en même temps(parcours des programmation)
+		* si on a programmé toute la tache, 
+			on la supprime de tableauTachesRestantAProgrammer
+	  	  sinon
+	    	on met a jour le temps restant à programmer
+
+* Ajout et Programmation d'un évènement (autre que tache cad Activite)
+	-> se fait avec ProgrammationManager
+		* il créer l'activité et la stocke

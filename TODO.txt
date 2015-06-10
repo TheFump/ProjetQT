@@ -1,0 +1,12 @@
+TODO :
+
+Doc technique doxygen
+Video
+
+Gérer les taches composites et les taches préemptées ou pas
+
+Gérer les erreurs
+
+Gérer les suppressions -> voir taches compo toussa; exemple fait pour event
+
+Gérer la sauvegarde (que pour	 event si pas le temps)
