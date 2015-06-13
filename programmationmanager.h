@@ -3,10 +3,12 @@
 
 #include <QDate>
 #include <QTime>
+
 #include "calendarexception.h"
 #include "programmation.h"
-#include "taches.h"
-#include "tachemanager.h"
+
+
+class TacheUnitaire;
 
 class ProgrammationManager {
     friend class Programmation;
@@ -16,8 +18,8 @@ private:
     unsigned int nbMax;
     static ProgrammationManager m_instance;
 
-    void addItem(Programmation* t);
-    Programmation* trouverProgrammation(const Tache& t) const;
+    void addItem(Programmation* p);
+    Programmation* trouverProgrammation(const TacheUnitaire& t) const;
 
     ProgrammationManager();
     ~ProgrammationManager();
@@ -25,11 +27,12 @@ private:
     ProgrammationManager& operator=(const ProgrammationManager& um);
 public:
 
-    void ajouterProgrammation(const Tache& t, const QDate& d, const QTime& h, const QTime& f);
+    void ajouterProgrammation(TacheUnitaire& t, const QDate& d, const QTime& h, const QTime& f);
     static ProgrammationManager& getInstance();
-     int getNb(){return nb;}
-     void supprimerProgrammation(const QString & id);
-    class Iterator {
+    int getNb(){return nb;}
+    void supprimerProgrammation(const QString & id);
+
+     class Iterator {
         friend class ProgrammationManager;
         Programmation** currentProg;
         unsigned int nbRemain;

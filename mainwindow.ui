@@ -206,9 +206,9 @@
    <widget class="QWidget" name="verticalLayoutWidget_4">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>40</y>
-      <width>221</width>
+      <x>200</x>
+      <y>0</y>
+      <width>253</width>
       <height>261</height>
      </rect>
     </property>
@@ -216,23 +216,15 @@
      <item>
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Gérer la programmation d'une Tache</string>
+        <string>Tache à programmer</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Entrez la Tache (id)</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="progId">
-       <property name="text">
-        <string>id</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="TacheAProgrammer"/>
      </item>
      <item>
       <widget class="QLabel" name="label_7">
@@ -247,25 +239,25 @@
      <item>
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Entrez l'heure de départ</string>
+        <string>Heure de debut (min non pris en compte)</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTimeEdit" name="progHoraire"/>
+      <widget class="QTimeEdit" name="progHdebut"/>
      </item>
      <item>
       <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Entrez l'heure de fin</string>
+        <string>Heure de fin (min non pris en compte)</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTimeEdit" name="Progfin"/>
+      <widget class="QTimeEdit" name="progHfin"/>
      </item>
      <item>
-      <widget class="QPushButton" name="addProg">
+      <widget class="QPushButton" name="addProgTache">
        <property name="text">
         <string>Ajouter</string>
        </property>
@@ -444,7 +436,7 @@
       <x>0</x>
       <y>90</y>
       <width>191</width>
-      <height>81</height>
+      <height>82</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -524,7 +516,7 @@
      <x>0</x>
      <y>0</y>
      <width>1236</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

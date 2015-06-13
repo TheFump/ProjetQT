@@ -10,8 +10,8 @@ TacheUnitaire::TacheUnitaire(const QString& id, const QString& i, const QString&
 QString TacheUnitaire::afficherTache()
 {
     QString text=Tache::afficherTache();
-    text.append("Duree : " + QString::number(getDuree().getDureeEnMinutes()) + "\n");
+    text.append("Duree : " + QString::number(getDuree().getDureeEnHeures()) + "h" + "\n");
     text.append("Preempte : " + QString::number(getPreempte()) + "\n");
-    text.append("Duree restante à programmer: " + QString::number(getDureeRestante().getDureeEnMinutes()) + "\n");
+    text.append("Duree restante à programmer: " + QString::number(getDureeRestante().getDureeEnHeures()) + "\n");
     return text;
 }

@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->CalendarDate->setDate(QDate::currentDate());
     ui->ProjetDisplay->setColumnCount(3);
     QStringList headers;
-    headers << tr("Projet") << tr("Tache") << tr("Tache Précédente");
+    headers << tr("Projet") << tr("Tache") << tr("Tache Prï¿½cï¿½dente");
     ui->ProjetDisplay->setHeaderLabels(headers);
 
 }
@@ -61,24 +61,24 @@ void MainWindow::update()
 {
 
     ui->Display->clear();
-     ProgrammationManager &p = ProgrammationManager::getInstance();
-     TacheManager &t = TacheManager::getInstance();
-     ProjetManager &m = ProjetManager::getInstance();
-     EventManager &e = EventManager::getInstance();
-     ui->Display->appendPlainText("Programmations : ");
-     ui->Display->appendPlainText(QString::number(p.getNb()));
-     ui->Display->appendPlainText("Taches : ");
-     ui->Display->appendPlainText(QString::number(t.getNb()));
-     ui->Display->appendPlainText("Projets : ");
-     ui->Display->appendPlainText(QString::number(m.getNb()));
-     ui->Display->appendPlainText("Events : ");
-     ui->Display->appendPlainText(QString::number(e.getNb()));
+//     ProgrammationManager &p = ProgrammationManager::getInstance();
+//     TacheManager &t = TacheManager::getInstance();
+//     ProjetManager &m = ProjetManager::getInstance();
+//     EventManager &e = EventManager::getInstance();
+//     ui->Display->appendPlainText("Programmations : ");
+//     ui->Display->appendPlainText(QString::number(p.getNb()));
+//     ui->Display->appendPlainText("Taches : ");
+//     ui->Display->appendPlainText(QString::number(t.getNb()));
+//     ui->Display->appendPlainText("Projets : ");
+//     ui->Display->appendPlainText(QString::number(m.getNb()));
+//     ui->Display->appendPlainText("Events : ");
+//     ui->Display->appendPlainText(QString::number(e.getNb()));
 
 
     this->afficherCalendar();
     this->treeGestion();
     this->afficherEvents();
-
+    this->afficherTacheRestanteProgrammer();
 }
 
 void MainWindow::afficherCalendar()
@@ -108,6 +108,7 @@ void MainWindow::displayProgrammation(const Programmation &p)
     for( i = p.getHoraire().toString("h").toInt(); i <p.getfin().toString("h").toInt(); i++)
     {
         ui->Calendar->item(i, date)->setBackgroundColor(Qt::gray);
+        ui->Calendar->item(i, date)->setText(p.getTache().Tache::getTitre());
     }
 }
 
@@ -139,23 +140,15 @@ void MainWindow::addTreeChild(QTreeWidgetItem *parent, QString name)
         // QTreeWidgetItem::addChild(QTreeWidgetItem * child)
         parent->addChild(treeItem);
         TacheManager &m = TacheManager::getInstance();
-        qDebug()<<"erreur 1";
-        qDebug()<<"erreur 1.5";
         TacheComposite* tc =dynamic_cast<TacheComposite*>(m.trouverTache(name));
-        qDebug()<<"erreur 2";
         if(tc != 0)
         {
-            qDebug()<<"erreur 3";
             TacheComposite::Iterator it=tc->getIteratorComposite();
-            qDebug()<<"erreur 3bis";
             while (!it.isDone())
             {
-                qDebug()<<"erreur 3.3";
                 this->addTreeChild(treeItem,it.current().Tache::getTitre());
                 it.next();
-                qDebug()<<"erreur 3.7";
             }
-            qDebug()<<"erreur 4";
         }
 
 }
@@ -192,6 +185,7 @@ void MainWindow::afficherEvents()
                     for(int h = buf[0]; h <= buf[1]-1; h++){
                         for(int d = buf[2]; d < buf[3]; d++){
                             ui->Calendar->item(h, d)->setBackgroundColor(Qt::green);
+                            ui->Calendar->item(h, d)->setText(it.current().getTitre());
                         }
                     }
                 }
@@ -201,7 +195,19 @@ void MainWindow::afficherEvents()
     }
 }
 
-
+void MainWindow::afficherTacheRestanteProgrammer()
+{
+    ui->TacheAProgrammer->clear();
+    TacheManager &t = TacheManager::getInstance();
+    for(TacheManager::Iterator it=t.getIterator(); !it.isDone(); it.next())
+    {
+        TacheUnitaire* tu =dynamic_cast<TacheUnitaire*>(&(it.current()));
+        if(tu != 0 && tu->getDureeRestante().getDureeEnMinutes()!=0)
+        {
+            ui->TacheAProgrammer->addItem(tu->Tache::getTitre());
+        }
+    }
+}
 
 
 
@@ -243,18 +249,6 @@ void MainWindow::on_ajoutEvent_clicked()
     }
     this->update();
 }
-/*
-<<<<<<< HEAD
-*/
-
-
-/*void MainWindow::on_addtachetoproject_clicked()
-{
-    ProjetManager &p = ProjetManager::getInstance();
-
-    p.ajouterTache(ui->tacheId->text(), ui->Idprojet->text());
-}*/
-
 
 /*
 void MainWindow::on_MainWindow_quit()
@@ -263,12 +257,21 @@ void MainWindow::on_MainWindow_quit()
     //m.viderTaches();
 }*/
 
-void MainWindow::on_addProg_clicked()
+void MainWindow::on_addProgTache_clicked()
 {
-    ProgrammationManager &p = ProgrammationManager::getInstance();
-    TacheManager &m = TacheManager::getInstance();
-    p.ajouterProgrammation(m.getTache(ui->progId->text()), ui->progDate->date(), ui->progHoraire->time(), ui->Progfin->time());
-    this->update();
+    try
+    {
+        ProgrammationManager &p = ProgrammationManager::getInstance();
+        TacheManager &m = TacheManager::getInstance();
+        TacheUnitaire& tu = dynamic_cast<TacheUnitaire&>(m.getTache(ui->TacheAProgrammer->currentText()));
+        if (&tu == 0)
+            throw CalendarException("Ereur MainWindow: conversion en TacheUnitaire impossible");
+        p.ajouterProgrammation(tu, ui->progDate->date(), QTime(ui->progHdebut->time().hour(),0), QTime(ui->progHfin->time().hour(),0));
+        this->update();
+    }catch(CalendarException e)
+    {
+        QMessageBox::warning(this,"Erreur",e.getInfo());
+    }
 }
 
 void MainWindow::on_CalendarNext_clicked()
@@ -297,11 +300,12 @@ void MainWindow::on_addProjet_pressed()
     {
         ProjetManager &pm=ProjetManager::getInstance();
         pm.ajouterProjet(ui->titreProjet->text());
+        update();
     } catch(CalendarException e)
     {
-        qDebug()<<e.getInfo();
+        QMessageBox::warning(this,"Erreur",e.getInfo());
     }
-    update();
+
 }
 
 void MainWindow::on_ajouterTache_pressed()
@@ -309,34 +313,45 @@ void MainWindow::on_ajouterTache_pressed()
     try
     {
         TacheManager &tm=TacheManager::getInstance();
+        // Tache Unitaire
         if (ui->UnitaireTache->isChecked())
-        {
-            int dur = ui->dureeTache->value();
-            Duree d(dur/60,dur%60);
-            tm.ajouterTacheUnitaire(ui->CheminTache->text(),ui->idTache->text(),ui->titreTache->text(),ui->titreTache->text(),ui->disponibiliteTache->date(),ui->echeanceTache->date(),d,ui->preempteTache->isChecked());
-        }
+            tm.ajouterTacheUnitaire(ui->CheminTache->text(),ui->idTache->text(),ui->titreTache->text(),ui->titreTache->text(),ui->disponibiliteTache->date(),ui->echeanceTache->date(),Duree(ui->dureeTache->value(),0),ui->preempteTache->isChecked());
+        // Tache Composite
         if (ui->CompositeTache->isChecked())
             tm.ajouterTacheComposite(ui->CheminTache->text(),ui->idTache->text(),ui->titreTache->text(),ui->disponibiliteTache->date(),ui->echeanceTache->date());
-    ui->Display->clear();
-    ui->Display->appendPlainText(tm.getTache(ui->idTache->text()).afficherTache());
-    update();
+
+        ui->Display->clear();
+        ui->Display->appendPlainText(tm.getTache(ui->idTache->text()).afficherTache());
+        update();
     } catch(CalendarException e)
     {
-        qDebug()<<e.getInfo();
+        QMessageBox::warning(this,"Erreur",e.getInfo());
     }
 }
 
 void MainWindow::on_printTache_pressed()
 {
-    ui->Display->clear();
-    TacheManager &m = TacheManager::getInstance();
-    ui->Display->appendPlainText(m.getTache(ui->tacheId->text()).afficherTache());
-    update();
+    try
+    {
+        ui->Display->clear();
+        TacheManager &m = TacheManager::getInstance();
+        ui->Display->appendPlainText(m.getTache(ui->tacheId->text()).afficherTache());
+        update();
+    } catch(CalendarException e)
+    {
+        QMessageBox::warning(this,"Erreur",e.getInfo());
+    }
 }
 
 
 void MainWindow::on_ajoutPrecedance_pressed()
 {
-    TacheManager &p=TacheManager::getInstance();
-    p.getTache(ui->suivanteTache->text()).ajouterContraintePrecedance(p.getTache(ui->precedenteTache->text()));
+    try
+    {
+        TacheManager &p=TacheManager::getInstance();
+        p.getTache(ui->suivanteTache->text()).ajouterContraintePrecedance(p.getTache(ui->precedenteTache->text()));
+    } catch(CalendarException e)
+    {
+        QMessageBox::warning(this,"Erreur",e.getInfo());
+    }
 }

@@ -126,7 +126,7 @@ void Tache::ajouterContraintePrecedance(Tache& t)
 
 bool operator==(const Tache& t1, const Tache& t2)
 {
-    return(t1.getId()==t2.getId());
+    return(t1.Tache::getId()==t2.Tache::getId());
 }
 
 

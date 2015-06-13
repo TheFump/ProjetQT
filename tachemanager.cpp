@@ -38,16 +38,10 @@ void TacheManager::ajouterTacheUnitaire(const QString chemin, const QString& id,
     if (trouverTache(t))
         throw CalendarException("erreur, TacheManager, tache deja existante");
     QStringList cheminformate=chemin.split('/');
-    qDebug()<<"point 1";
     TacheUnitaire* newTache = new TacheUnitaire(id,i,t,dispo,deadline,d,p);
-    qDebug()<<"point 2";
     ProjetManager pm = ProjetManager::getInstance();
-    qDebug()<<"point 3";
     pm.ajouterTache(cheminformate,*newTache);
-    qDebug()<<"point 4";
     addItem(newTache);
-    qDebug()<<"point 5";
-    //ProgrammationManager::getInstance().ajouterTacheAProgrammer(*newTache);
 }
 
 void TacheManager::ajouterTacheComposite(const QString chemin,const QString& id, const QString& t, const QDate& dispo, const QDate& deadline)

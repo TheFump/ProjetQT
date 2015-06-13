@@ -18,9 +18,9 @@ public:
     QString afficherTache();
     void afficher(int retour [8]) {}
 
-    const Duree& getDuree() const { return duree; }
     bool getPreempte() const { return preempte; }
     const Duree& getDureeRestante() const { return dureeRestante; }
+    void setDureeRestante(const Duree& d) { dureeRestante = d; }
 
 };
 

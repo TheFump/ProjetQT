@@ -58,10 +58,11 @@ private:
     void treeGestion();
     void projetGestion();
     void afficherEvents();
+    void afficherTacheRestanteProgrammer();
 
 public slots:
     //void on_MainWindow_quit();
-    void on_addProg_clicked();
+    void on_addProgTache_clicked();
     void on_CalendarNext_clicked();
     void on_CalendarPrevious_clicked();
 

@@ -49,6 +49,8 @@ void ProjetManager::ajouterTache(QStringList chemin,Tache& t)
     if (chemin.isEmpty())
         throw CalendarException("erreur ProjetManager: pas de nom de Projet");
     Projet* tmp=trouverProjet(chemin[0]);
+    if (tmp==0)
+        throw CalendarException("erreur ProjetManager: chemin inexistant");
     chemin.erase(chemin.begin());
     tmp->ajouterTache(chemin,t);
 }
