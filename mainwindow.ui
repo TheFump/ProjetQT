@@ -122,7 +122,15 @@
         </widget>
        </item>
        <item>
-        <widget class="QDateEdit" name="disponibiliteTache"/>
+        <widget class="QDateEdit" name="disponibiliteTache">
+         <property name="date">
+          <date>
+           <year>2015</year>
+           <month>6</month>
+           <day>14</day>
+          </date>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -139,7 +147,15 @@
         </widget>
        </item>
        <item>
-        <widget class="QDateEdit" name="echeanceTache"/>
+        <widget class="QDateEdit" name="echeanceTache">
+         <property name="date">
+          <date>
+           <year>2015</year>
+           <month>6</month>
+           <day>14</day>
+          </date>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -244,7 +260,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QTimeEdit" name="progHdebut"/>
+      <widget class="QTimeEdit" name="progHdebut">
+       <property name="currentSection">
+        <enum>QDateTimeEdit::HourSection</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_9">
@@ -290,7 +310,22 @@
       </widget>
      </item>
      <item>
-      <widget class="QDateEdit" name="CalendarDate"/>
+      <widget class="QDateEdit" name="CalendarDate">
+       <property name="minimumDate">
+        <date>
+         <year>1752</year>
+         <month>9</month>
+         <day>14</day>
+        </date>
+       </property>
+       <property name="date">
+        <date>
+         <year>2015</year>
+         <month>6</month>
+         <day>14</day>
+        </date>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -396,7 +431,18 @@
       </widget>
      </item>
      <item>
-      <widget class="QDateEdit" name="datedebevent"/>
+      <widget class="QDateEdit" name="datedebevent">
+       <property name="currentSection">
+        <enum>QDateTimeEdit::DaySection</enum>
+       </property>
+       <property name="date">
+        <date>
+         <year>2015</year>
+         <month>6</month>
+         <day>14</day>
+        </date>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_12">

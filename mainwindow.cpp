@@ -14,7 +14,6 @@
 #include "projetmanager.h"
 #include "projet.h"
 
-///voldjinn
 
 
 
@@ -24,9 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(afficherT(Tache& t)));
-    //QMetaObject::connectSlotsByName(this);
-
     ui->Calendar->setRowCount(24);
     ui->Calendar->setColumnCount(7);
 
