@@ -36,6 +36,14 @@ QString Tache::afficherTache()
     text.append("Id : " + getId() + "\n");
     text.append("Disponibilite : " + getDateDisponibilite().toString() + "\n");
     text.append("Echeance : " + getDateEcheance().toString() + "\n");
+    text.append("Tache précédante : \n");
+    for(Tache::Iterator it=getIteratorPredecesseur(); !it.isDone(); it.next())
+        text.append(it.current().Tache::getId() + " ");
+    text.append("\n");
+    text.append("Tache suivante: \n");
+    for(Tache::Iterator it=getIteratorSuccesseur(); !it.isDone(); it.next())
+        text.append(it.current().Tache::getId() + " ");
+    text.append("\n");
     return text;
 }
 

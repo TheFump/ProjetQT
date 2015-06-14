@@ -43,9 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     }
     ui->CalendarDate->setDate(QDate::currentDate());
-    ui->ProjetDisplay->setColumnCount(3);
+    ui->ProjetDisplay->setColumnCount(1);
     QStringList headers;
-    headers << tr("Projet") << tr("Tache") << tr("Tache Pr�c�dente");
+    headers << tr("Arborecence des Projets");
     ui->ProjetDisplay->setHeaderLabels(headers);
 
 }
@@ -61,20 +61,6 @@ void MainWindow::update()
 {
 
     ui->Display->clear();
-//     ProgrammationManager &p = ProgrammationManager::getInstance();
-//     TacheManager &t = TacheManager::getInstance();
-//     ProjetManager &m = ProjetManager::getInstance();
-//     EventManager &e = EventManager::getInstance();
-//     ui->Display->appendPlainText("Programmations : ");
-//     ui->Display->appendPlainText(QString::number(p.getNb()));
-//     ui->Display->appendPlainText("Taches : ");
-//     ui->Display->appendPlainText(QString::number(t.getNb()));
-//     ui->Display->appendPlainText("Projets : ");
-//     ui->Display->appendPlainText(QString::number(m.getNb()));
-//     ui->Display->appendPlainText("Events : ");
-//     ui->Display->appendPlainText(QString::number(e.getNb()));
-
-
     this->afficherCalendar();
     this->treeGestion();
     this->afficherEvents();
@@ -89,6 +75,7 @@ void MainWindow::afficherCalendar()
     for(int i =0; i < 24; i++){
         for(int j =0; j < 7; j++){
             ui->Calendar->item(i, j)->setBackgroundColor(Qt::white);
+            ui->Calendar->item(i, j)->setText("");
         }
     }
     while(!i.isDone()){
@@ -125,8 +112,6 @@ void MainWindow::addTreeRoot(QString name, Projet& p)
         while(!Ip.isDone())
         {
             this->addTreeChild(treeItem, Ip.current().Tache::getTitre());
-            TacheManager &m = TacheManager::getInstance();
-            ui->Display->appendPlainText( m.getTache(Ip.current().getId()).afficherTache());
             Ip.next();
         }
 }
@@ -160,7 +145,6 @@ void MainWindow::treeGestion()
 
     ProjetManager::Iterator Ip = p.getIterator();
     ui->ProjetDisplay->clear();
-
     while(!Ip.isDone())
     {
         this->addTreeRoot(Ip.current().getTitre(), Ip.current());
@@ -209,45 +193,28 @@ void MainWindow::afficherTacheRestanteProgrammer()
     }
 }
 
-
-
-
-
-/*
-
-void MainWindow::on_printTache_clicked()
-{
-    ui->Display->clear();
-    TacheManager &m = TacheManager::getInstance();
-    ui->Display->appendPlainText(m.getTache(ui->tacheId->text()).Tache::afficherTache());
-    update();
-}
-
-
-
-void MainWindow::on_ajouterProjet_pressed()
-{
-    ProjetManager &p = ProjetManager::getInstance();
-    p.ajouterProjet(ui->Idprojet->text(), ui->titre->text());
-}
-
-*/
 void MainWindow::on_ajoutEvent_clicked()
 {
-    EventManager &e = EventManager::getInstance();
-    if(ui->event1j->isChecked() && !ui->eventpj->isChecked() && !ui->rdv->isChecked())
+    try
     {
-        e.ajouterEvent(ui->idevent->text(), ui->titreevent->text(), ui->dureeevnt->value(), ui->datedebevent->date() );
-    }
-    else if(!ui->event1j->isChecked() && ui->eventpj->isChecked() && !ui->rdv->isChecked())
+        EventManager &e = EventManager::getInstance();
+        if(ui->event1j->isChecked() && !ui->eventpj->isChecked() && !ui->rdv->isChecked())
+        {
+            e.ajouterEvent(ui->idevent->text(), ui->titreevent->text(), ui->dureeevnt->value(), ui->datedebevent->date() );
+        }
+        else if(!ui->event1j->isChecked() && ui->eventpj->isChecked() && !ui->rdv->isChecked())
+        {
+            e.ajouterEvent(ui->idevent->text(), ui->titreevent->text(), ui->dureeevnt->value(), ui->datedebevent->date() , ui->datefinevent->date() );
+        }
+        else if(!ui->event1j->isChecked() && !ui->eventpj->isChecked() && ui->rdv->isChecked())
+        {
+            e.ajouterEvent(ui->idevent->text(), ui->titreevent->text(), ui->dureeevnt->value(), ui->datedebevent->date() , ui->timedebutevent->time(), ui->timefinevent->time() );
+        }
+        this->update();
+    }catch(CalendarException e)
     {
-        e.ajouterEvent(ui->idevent->text(), ui->titreevent->text(), ui->dureeevnt->value(), ui->datedebevent->date() , ui->datefinevent->date() );
+        QMessageBox::warning(this,"Erreur",e.getInfo());
     }
-    else if(!ui->event1j->isChecked() && !ui->eventpj->isChecked() && ui->rdv->isChecked())
-    {
-        e.ajouterEvent(ui->idevent->text(), ui->titreevent->text(), ui->dureeevnt->value(), ui->datedebevent->date() , ui->timedebutevent->time(), ui->timefinevent->time() );
-    }
-    this->update();
 }
 
 /*
@@ -277,22 +244,15 @@ void MainWindow::on_addProgTache_clicked()
 void MainWindow::on_CalendarNext_clicked()
 {
     ui->CalendarDate->setDate(ui->CalendarDate->date().addDays(7));
-    this->update();
+    update();
 }
 
 void MainWindow::on_CalendarPrevious_clicked()
 {
     ui->CalendarDate->setDate(ui->CalendarDate->date().addDays(-7));
-    this->update();
+    update();
 
 }
-
-
-//*********************************************************************CalendarWidgget***********************************************************************************
-
-
-
-
 
 void MainWindow::on_addProjet_pressed()
 {
@@ -319,10 +279,8 @@ void MainWindow::on_ajouterTache_pressed()
         // Tache Composite
         if (ui->CompositeTache->isChecked())
             tm.ajouterTacheComposite(ui->CheminTache->text(),ui->idTache->text(),ui->titreTache->text(),ui->disponibiliteTache->date(),ui->echeanceTache->date());
-
-        ui->Display->clear();
-        ui->Display->appendPlainText(tm.getTache(ui->idTache->text()).afficherTache());
         update();
+        ui->Display->appendPlainText(tm.getTache(ui->idTache->text()).afficherTache());
     } catch(CalendarException e)
     {
         QMessageBox::warning(this,"Erreur",e.getInfo());
@@ -336,7 +294,6 @@ void MainWindow::on_printTache_pressed()
         ui->Display->clear();
         TacheManager &m = TacheManager::getInstance();
         ui->Display->appendPlainText(m.getTache(ui->tacheId->text()).afficherTache());
-        update();
     } catch(CalendarException e)
     {
         QMessageBox::warning(this,"Erreur",e.getInfo());
